@@ -10,7 +10,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const bot = new Telegram(botToken, { polling: true });
+const bot = new Telegram(botToken, {
+  polling: { params: { allowed_updates: true } },
+});
 bot.onText(/\/start/, (message) => {
   bot.sendMessage(
     message.chat.id,
@@ -23,19 +25,25 @@ bot.onText(/\/start/, (message) => {
 
 bot.on("message", async (message) => {
   //bot.sendMessage(message.chat.id, "thinking");
-  const chatId = message.chat.id;
-  if (!(message.text == "/start")) {
-    const reply = await openai.createCompletion({
-      max_tokens: 4000,
-      model: "text-davinci-003", //"ada",
-      prompt: message.text,
-      temperature: 0.5,
-      /* stop: "\n",
-    echo: true,
-    n: 1, */
-    });
+  try {
+    // code to generate response
+    const chatId = message.chat.id;
+    if (!(message.text == "/start")) {
+      const reply = await openai.createCompletion({
+        max_tokens: 4000,
+        model: "text-davinci-003", //"ada",
+        prompt: message.text,
+        temperature: 0.5,
+        /* stop: "\n",
+      echo: true,
+      n: 1, */
+      });
 
-    bot.sendMessage(chatId, reply.data.choices[0].text);
+      bot.sendMessage(chatId, reply.data.choices[0].text);
+    }
+  } catch (error) {
+    console.error(error);
+    bot.sendMessage(message.chat.id, "Oops, something went wrong!");
   }
 });
 
