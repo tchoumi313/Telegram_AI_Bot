@@ -68,6 +68,8 @@ const commands = {
     "/about - Learn more about the bot",
   "/about":
     "DonaldT AI Bot is a Telegram bot that uses the OpenAI ChatGPT model to provide answers to your questions. It was created by Donald TCHOUMI, a software developer with a passion for artificial intelligence and machine learning.",
+  "/donate":
+    "If you like this bot and want to support its development, please consider making a donation on the btc account bc1qa6mad79c8ge6rherhpwg6wvmhm",
 };
 
 app.post(URL, async (req, res) => {
