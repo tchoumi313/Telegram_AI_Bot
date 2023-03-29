@@ -10,7 +10,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const bot = new Telegram(botToken, { params: { allowed_updates: true } });
+const bot = new Telegram(botToken, {
+  params: { allowed_updates: true, timeout: 60 },
+});
 bot.onText(/\/start/, (message) => {
   bot.sendMessage(
     message.chat.id,
