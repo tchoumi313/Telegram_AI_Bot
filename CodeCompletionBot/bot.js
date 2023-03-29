@@ -39,7 +39,7 @@ app.post(URL, async (req, res) => {
     } else {
       const reply = await openai.createCompletion({
         max_tokens: 4000,
-        model: "davinci-codex", //"ada",
+        model: "davinci-002", //"ada",
         prompt: text,
         temperature: 0.5,
         /*  stop: "\n",
