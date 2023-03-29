@@ -1,16 +1,16 @@
 const Telegram = require("node-telegram-bot-api");
 const { OpenAIApi, Configuration } = require("openai");
 
-const OpenAIAPIKey = "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";
-const botToken = "5997255712:AAH3HDkyST-jPBpgCmaVKOh7Q5MD7QWqz8w";
+//const OpenAIAPIKey = "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";
+//const botToken = "5997255712:AAH3HDkyST-jPBpgCmaVKOh7Q5MD7QWqz8w";
 
 const configuration = new Configuration({
   // organization: "org-yR4wdkzoY6o2ibaWM64CusQ5",
-  apiKey: OpenAIAPIKey, //process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY, //,OpenAIAPIKey
 });
 const openai = new OpenAIApi(configuration);
 
-const bot = new Telegram(botToken, {
+const bot = new Telegram(process.env.TELEGRAM_BOT_TOKEN, {
   params: { allowed_updates: true, timeout: 60 },
 });
 bot.onText(/\/start/, (message) => {

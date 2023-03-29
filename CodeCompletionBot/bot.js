@@ -1,58 +1,67 @@
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const axios = require("axios");
 const Telegram = require("node-telegram-bot-api");
 const { OpenAIApi, Configuration } = require("openai");
 
-const OpenAIAPIKey = "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";
-const botToken = "5998275116:AAHvj1wygq5TLIKOODGOEhSItDPBRKNxPNg";
-
 const configuration = new Configuration({
-  // organization: "org-yR4wdkzoY6o2ibaWM64CusQ5",
-  apiKey: OpenAIAPIKey, //process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY, //,OpenAIAPIKey
 });
 const openai = new OpenAIApi(configuration);
 
-const bot = new Telegram(botToken, {
-  polling: { params: { allowed_updates: true, timeout: 60 } },
-});
-bot.onText(/\/start/, (message) => {
-  bot.sendMessage(
-    message.chat.id,
-    "Welcome to DonaldT AI Bot!\n" +
-      "This is an AI Assitant base on OPENAI ChatGPT model.\n" +
-      "He is here to provide answer to your questions.\n" +
-      "Need to create your own bot or any other Software development task? Hire me at https://donaldtPortfolio.netlify.app/#contact/"
-  );
-});
+const { SERVER_URL, TELEGRAM_BOT_TOKEN, OPENAI_API_KEY } = process.env;
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+const URL = `/webhook/${TELEGRAM_BOT_TOKEN}`;
+const WEBHOOK_URL = SERVER_URL + URL;
 
-bot.on("message", async (message) => {
-  //bot.sendMessage(message.chat.id, "thinking");
+const app = express();
+app.use(bodyParser.json());
+
+const init = async () => {
+  const res = await axios.get(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`);
+  console.log(res.data);
+};
+app.post(URL, async (req, res) => {
+  console.log(req.body);
+  const text = req.body.message.text;
+  const chat_id = req.body.message.chat.id;
   try {
-    // code to generate response
-    const chatId = message.chat.id;
-    if (!(message.text == "/start")) {
+    let sendMessageBody = {
+      chat_id: chat_id,
+    };
+    if (text == "/start") {
+      sendMessageBody.text =
+        "Welcome to DonaldT AI Bot!\n" +
+        "This is an AI Assitant base on OPENAI Codex model.\n" +
+        "He is here to help you code faster, he provide answers to your questions.\n" +
+        "Need to create your own bot or any other Software development task? Hire me at https://donaldtPortfolio.netlify.app/#contact/";
+    } else {
       const reply = await openai.createCompletion({
         max_tokens: 4000,
-        model: "text-davinci-003", //"ada",
-        prompt: message.text,
+        model: "davinci-codex", //"ada",
+        prompt: text,
         temperature: 0.5,
-        /* stop: "\n",
-      echo: true,
-      n: 1, */
+        /*  stop: "\n",
+          echo: true,
+          n: 1, */
       });
 
-      bot.sendMessage(chatId, reply.data.choices[0].text);
+      sendMessageBody.text = reply.data.choices[0].text;
     }
+    await axios.post(`${TELEGRAM_API}/sendMessage`, sendMessageBody);
   } catch (error) {
     console.error(error);
-    bot.sendMessage(message.chat.id, "Oops, something went wrong!");
+    await axios.post(`${TELEGRAM_API}/sendMessage`, {
+      chat_id: chat_id,
+      text: "Oops, something went wrong!",
+    });
   }
+
+  return res.send();
 });
 
-/*
-import { Configuration, OpenAIApi } from "openai";
-const configuration = new Configuration({
-    organization: "org-yR4wdkzoY6o2ibaWM64CusQ5",
-    apiKey: process.env.OPENAI_API_KEY,
+app.listen(process.env.PORT || 5000, async (req, res) => {
+  console.log("app running on port ", process.env.PORT || 5000);
+  await init();
 });
-const openai = new OpenAIApi(configuration);
-const response = await openai.listEngines();
- */

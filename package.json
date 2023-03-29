@@ -2,11 +2,13 @@
   "name": "telegram_ai_bot",
   "version": "1.0.0",
   "description": "Node JS AI Telegram Bot",
-  "main": "bot.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server" : "nodemon bot",
-    "start" : "node bot"
+    
+    "start": "node index.js",
+    "server": "nodemon index.js"
+
   },
   "keywords": [
     "nodejs",
@@ -16,8 +18,12 @@
   "author": "DonaldT",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.3.4",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "node-telegram-bot-api": "^0.61.0",
-    "openai": "^3.2.1",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "openai": "^3.2.1"
   }
 }
