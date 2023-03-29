@@ -53,6 +53,23 @@ const init = async () => {
   const res = await axios.get(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`);
   console.log(res.data);
 };
+
+// Define your predefined commands and their responses
+const commands = {
+  "/start":
+    "Welcome to DonaldT AI Bot!\n" +
+    "This is an AI Assistant based on OPENAI ChatGPT model.\n" +
+    "He is here to provide answers to your questions.\n" +
+    "Need to create your own bot or any other software development task? Hire me at https://donaldtPortfolio.netlify.app/#contact/",
+  "/help":
+    "Here are the commands you can use:\n" +
+    "/start - Start the bot\n" +
+    "/help - Show the available commands\n" +
+    "/about - Learn more about the bot",
+  "/about":
+    "DonaldT AI Bot is a Telegram bot that uses the OpenAI ChatGPT model to provide answers to your questions. It was created by Donald TCHOUMI, a software developer with a passion for artificial intelligence and machine learning.",
+};
+
 app.post(URL, async (req, res) => {
   console.log(req.body);
   const text = req.body.message.text;
@@ -61,12 +78,8 @@ app.post(URL, async (req, res) => {
     let sendMessageBody = {
       chat_id: chat_id,
     };
-    if (text == "/start") {
-      sendMessageBody.text =
-        "Welcome to DonaldT AI Bot!\n" +
-        "This is an AI Assitant base on OPENAI ChatGPT model.\n" +
-        "He is here to provide answer to your questions.\n" +
-        "Need to create your own bot or any other Software development task? Hire me at https://donaldtPortfolio.netlify.app/#contact/";
+    if (commands[text]) {
+      sendMessageBody.text = commands[text];
     } else {
       const reply = await openai.createCompletion({
         max_tokens: 4000,
