@@ -91,9 +91,6 @@ app.post(URL, async (req, res) => {
         model: "text-davinci-003", //"ada",
         prompt: text,
         temperature: 0.5,
-        /*  stop: "\n",
-          echo: true,
-          n: 1, */
       });
 
       sendMessageBody.text = reply.data.choices[0].text;
@@ -109,6 +106,43 @@ app.post(URL, async (req, res) => {
 
   return res.send();
 });
+
+/* app.post(URL, async (req, res) => {
+  console.log(req.body);
+  const text = req.body.message.text;
+  const chat_id = req.body.message.chat.id;
+  try {
+    let sendMessageBody = {
+      chat_id: chat_id,
+    };
+    if (commands[text]) {
+      sendMessageBody.text = commands[text];
+    } else {
+      const prompt = `Generate an image of ${text}`;
+      const response = await openai.createImage({
+        prompt: prompt,
+        n: 1,
+        size: "256x256",
+        responseFormat: "url",
+        model: "image-alpha-001",
+      });
+      sendMessageBody.photo = response.data.data[0].url;
+    }
+    await axios.post(`${TELEGRAM_API}/sendPhoto`, sendMessageBody, {
+      headers: {
+        "Content-Type": "applicationa /json",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    await axios.post(`${TELEGRAM_API}/sendMessage`, {
+      chat_id: chat_id,
+      text: "Oops, something went wrong!",
+    });
+  }
+
+  return res.send;
+}); */
 
 app.listen(process.env.PORT || 5000, async (req, res) => {
   console.log("app running on port ", process.env.PORT || 5000);
