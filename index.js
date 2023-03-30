@@ -65,16 +65,18 @@ const commands = {
     "Here are the commands you can use:\n" +
     "/start - Start the bot\n" +
     "/help - Show the available commands\n" +
-    "/about - Learn more about the bot"+
+    "/about - Learn more about the bot" +
     "/donate - support the development community",
   "/about":
     "DonaldT AI Bot is a Telegram bot that uses the OpenAI ChatGPT model to provide answers to your questions. It was created by Donald TCHOUMI, a software developer with a passion for artificial intelligence and machine learning.\n /help - Show the available commands \n Feel free to search what so ever you want ",
-  :
-    "If you like this bot and want to support its development, please consider making a donation on the btc account bc1qa6mad79c8ge6rherhpwg6wvmhm",
+  "/donate":
+    "If you like this bot and want to support its development, please consider making a donation on the BTC account:" +
+    "`bc1qa6mad79c8ge6rherhpwg6wvmhm`" +
+    "You can copy this address and use it to send a donation. Thank you for your support!",
 };
 
 app.post(URL, async (req, res) => {
- // console.log(req.body);
+  // console.log(req.body);
   const text = req.body.message.text;
   const chat_id = req.body.message.chat.id;
   try {
