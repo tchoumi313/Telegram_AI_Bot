@@ -65,6 +65,7 @@ const commands = {
 app.post(URL, async (req, res) => { // console.log(req.body);
     const text = req.body.message.text;
     const chat_id = req.body.message.chat.id;
+    const message_id = req.body.message.message_id;
     const reply_to_message_id = req.body.message.reply_to_message ?.message_id;
     try {
         let sendMessageBody = {
